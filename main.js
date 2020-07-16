@@ -1,18 +1,22 @@
-var MongoClient = require('mongodb').MongoClient
+const MongoClient = require('mongodb').MongoClient
 
-var ipAddress = 'localhost'
-var port = '27017'
-var url = `mongodb://${ipAddress}:${port}/`
-var dbName = 'exampleDB'
-var collection = 'users'
+const ipAddress = 'localhost'
+const port = '27017'
+const url = `mongodb://${ipAddress}:${port}/`
+const dbName = 'exampleDB'
+const collectionName = 'users'
 
-MongoClient.connect(url, function(err, db) {
+MongoClient.connect(url, doStuff)
+
+function doStuff(err, db) {
   if (err) throw err
-  var dbo = db.db(dbName)
-  dbo.collection(collection).findOne({}, function(err, result) {
-    if (err) throw err
-    var msg = ` Hello, ${ result.firstName } ${ result.lastName }!`
-    console.log(msg)
-    db.close()
-  })
-})
+  const dbo = db.db(dbName)
+  const collection = dbo.collection(collectionName)
+  collection.findOne({}, sayHello)
+  db.close()
+}
+
+function sayHello(err, result) {
+  if (err) throw err
+  console.log(` Hello, ${ result.firstName } ${ result.lastName }!`)
+}
